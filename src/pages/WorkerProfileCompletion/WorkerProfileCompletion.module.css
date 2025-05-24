@@ -1,0 +1,229 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #fafbff 0%, #f4f6fb 100%);
+}
+
+.formWrapper {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin: 2rem auto;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.photoUpload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.photoUpload:hover {
+  border-color: #dd2e0d;
+  background: rgba(221, 46, 13, 0.02);
+}
+
+.photoPreview {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+}
+
+.photoPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoPlaceholder {
+  color: #94a3b8;
+  font-size: 2rem;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.helperText {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-align: center;
+}
+
+/* Make profile photo preview circular */
+.photoUpload:first-child .photoPreview {
+  border-radius: 50%;
+}
+
+/* Make ID proof preview rectangular */
+.photoUpload:nth-child(2) .photoPreview {
+  width: 160px;
+  height: 100px;
+  border-radius: 8px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.formGroup label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.select {
+  height: 42px;
+  padding: 0 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 0.875rem;
+  color: #0f172a;
+  width: 100%;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1em;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #dd2e0d;
+  box-shadow: 0 0 0 2px rgba(221, 46, 13, 0.1);
+}
+
+.select:hover {
+  border-color: #dd2e0d;
+}
+
+.textarea {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 0.875rem;
+  color: #0f172a;
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  line-height: 1.5;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #dd2e0d;
+  box-shadow: 0 0 0 2px rgba(221, 46, 13, 0.1);
+}
+
+.textarea:hover {
+  border-color: #dd2e0d;
+}
+
+.locationFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: -0.5rem;
+}
+
+/* Button sizing in photo upload sections */
+.photoUpload button {
+  width: auto;
+  min-width: 160px;
+  height: 36px;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .formWrapper {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .photoPreview {
+    width: 80px;
+    height: 80px;
+  }
+
+  .photoUpload:nth-child(2) .photoPreview {
+    width: 140px;
+    height: 80px;
+  }
+
+  .locationFields {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.formWrapper {
+  animation: slideIn 0.5s ease-out;
+}

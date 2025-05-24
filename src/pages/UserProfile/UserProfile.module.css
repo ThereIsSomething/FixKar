@@ -1,0 +1,179 @@
+.profilePage {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fafbff 0%, #f4f6fb 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #475569;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background: rgba(221, 46, 13, 0.1);
+  color: #dd2e0d;
+}
+
+.userIcon {
+  font-size: 2rem;
+  color: #475569;
+}
+
+.main {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profileCard {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.largeUserIcon {
+  font-size: 3.5rem;
+  color: #dd2e0d;
+}
+
+.profileHeader h1 {
+  font-size: 1.5rem;
+  color: #0f172a;
+  font-weight: 700;
+  margin: 0;
+}
+
+.profileFields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fieldGroup label {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.fieldContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  min-height: 48px;
+}
+
+.fieldContent span {
+  flex: 1;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.editButton {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.editButton:hover {
+  background: rgba(221, 46, 13, 0.1);
+  color: #dd2e0d;
+}
+
+.fieldContent input {
+  flex: 1;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #dd2e0d;
+  border-radius: 8px;
+  outline: none;
+  background: white;
+}
+
+.fieldContent input:focus {
+  box-shadow: 0 0 0 2px rgba(221, 46, 13, 0.2);
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fafbff 0%, #f4f6fb 100%);
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(221, 46, 13, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #dd2e0d;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+
+  .profileCard {
+    padding: 1.5rem;
+  }
+
+  .largeUserIcon {
+    font-size: 3rem;
+  }
+
+  .profileHeader h1 {
+    font-size: 1.25rem;
+  }
+}

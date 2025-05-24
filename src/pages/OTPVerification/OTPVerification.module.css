@@ -1,0 +1,328 @@
+/* OTP Verification Page - Mobile First Design */
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-4);
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--secondary-50) 100%);
+  position: relative;
+}
+
+.formWrapper {
+  background: white;
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8) var(--space-6);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  animation: slideInUp 0.6s ease-out;
+  text-align: center;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.formWrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--success), var(--primary-500));
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto var(--space-6);
+  background: linear-gradient(135deg, var(--primary-100), var(--secondary-100));
+  border-radius: 50%;
+  position: relative;
+}
+
+.iconWrapper::before {
+  content: '📧';
+  font-size: 2.5rem;
+  position: absolute;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+  color: var(--gray-900);
+}
+
+.subtitle {
+  font-size: var(--font-size-base);
+  color: var(--gray-600);
+  margin-bottom: var(--space-8);
+  line-height: 1.6;
+}
+
+.subtitle strong {
+  color: var(--primary-600);
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.otpContainer {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+.otpInput {
+  width: 50px;
+  height: 50px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--gray-900);
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.otpInput:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+  transform: scale(1.05);
+}
+
+.otpInput:valid {
+  border-color: var(--success);
+  background: var(--gray-50);
+}
+
+.button {
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.button:hover::before {
+  left: 100%;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+.button:disabled {
+  background: var(--gray-300);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.resendSection {
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--gray-200);
+}
+
+.resendText {
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-3);
+}
+
+.resendButton {
+  background: none;
+  border: 2px solid var(--primary-500);
+  color: var(--primary-600);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resendButton:hover {
+  background: var(--primary-500);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.resendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.timer {
+  color: var(--warning);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin-top: var(--space-2);
+}
+
+.errorMessage {
+  color: var(--error);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--error);
+}
+
+.successMessage {
+  color: var(--success);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--success);
+}
+
+.backButton {
+  margin-top: var(--space-6);
+  background: none;
+  border: none;
+  color: var(--gray-500);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: color 0.2s ease;
+}
+
+.backButton:hover {
+  color: var(--gray-700);
+}
+
+/* Loading state */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .container {
+    padding: var(--space-8) var(--space-6);
+  }
+  
+  .formWrapper {
+    padding: var(--space-10) var(--space-8);
+    max-width: 480px;
+  }
+  
+  .title {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .otpContainer {
+    gap: var(--space-4);
+  }
+  
+  .otpInput {
+    width: 60px;
+    height: 60px;
+    font-size: var(--font-size-2xl);
+  }
+  
+  .iconWrapper {
+    width: 100px;
+    height: 100px;
+    margin-bottom: var(--space-8);
+  }
+  
+  .iconWrapper::before {
+    font-size: 3rem;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .formWrapper {
+    max-width: 520px;
+  }
+}

@@ -1,0 +1,405 @@
+/* Role Selection Page - Mobile First Design */
+.UserSelection {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, #fff5f3 0%, #ffede9 100%);
+  position: relative;
+  animation: fadeIn 0.6s ease-out;
+  overflow-x: hidden;
+}
+
+.ChooseOne {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 3.5rem;
+  text-align: center;
+  background: linear-gradient(135deg, #dd2e0d, #ff4d2e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  animation: slideDown 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.ChooseOne::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #dd2e0d, #ff4d2e);
+  border-radius: 2px;
+  animation: expandLine 0.6s ease-out 0.4s forwards;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes expandLine {
+  0% {
+    transform: translateX(-50%) scaleX(0);
+  }
+  100% {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+.SelectionButton {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  min-height: 160px;
+  border: 2px solid rgba(221, 46, 13, 0.2);
+  border-radius: 16px;
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+}
+
+.SelectionButton:hover {
+  border-color: #dd2e0d;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -5px rgba(221, 46, 13, 0.25);
+}
+
+.SelectionButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(221, 46, 13, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.SelectionButton:hover::before {
+  left: 100%;
+}
+
+.SelectionButton:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+.SelectionButton:nth-child(3) {
+  animation-delay: 0.8s;
+}
+
+@keyframes fadeIn {
+  0% { 
+    opacity: 0; 
+    transform: translateY(30px) scale(0.95); 
+  }
+  60% {
+    transform: translateY(-5px) scale(1.02);
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+.selectionButton:hover {
+  border-color: var(--primary-400);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.selectionButton:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+.selected {
+  border-color: #dd2e0d;
+  background: rgba(221, 46, 13, 0.05);
+  box-shadow: 0 8px 12px -3px rgba(221, 46, 13, 0.2);
+}
+
+.selected:hover {
+  border-color: var(--primary-600);
+}
+
+.radioInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.topRightRadio {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 24px;
+  height: 24px;
+  background: white;
+  border: 2px solid rgba(221, 46, 13, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.selected .topRightRadio {
+  border-color: var(--primary-500);
+  background: var(--primary-500);
+}
+
+.tick {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.selected .tick {
+  opacity: 1;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-right: var(--space-10);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary-100), var(--secondary-100));
+  border-radius: var(--radius-xl);
+  margin-right: var(--space-4);
+  transition: all 0.3s ease;
+}
+
+.selected .iconWrapper {
+  background: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
+}
+
+.icon {
+  font-size: 24px;
+  color: var(--primary-600);
+  transition: color 0.3s ease;
+}
+
+.selected .icon {
+  color: #dd2e0d;
+}
+
+.textContent {
+  flex: 1;
+}
+
+.title {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.description {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+.selected .description {
+  color: var(--gray-700);
+}
+
+.continueButton {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  border: none;
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.continueButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.continueButton:hover::before {
+  left: 100%;
+}
+
+.continueButton:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+}
+
+.continueButton:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-lg);
+}
+
+.continueButton:disabled {
+  background: var(--gray-300);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.continueButton:disabled::before {
+  display: none;
+}
+
+/* Button Styles with Animations */
+button[type="button"] {
+  background: linear-gradient(135deg, #dd2e0d, #ff4d2e) !important;
+  color: white !important;
+  padding: 1rem 3.5rem !important;
+  border-radius: 12px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 6px -1px rgba(221, 46, 13, 0.2) !important;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 1s;
+  opacity: 0;
+}
+
+button[type="button"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+button[type="button"]:hover::before {
+  left: 100%;
+}
+
+button[type="button"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 15px -3px rgba(221, 46, 13, 0.3) !important;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .container {
+    padding: var(--space-8) var(--space-6);
+  }
+  
+  .userSelection {
+    padding: 3rem 2rem;
+    max-width: 520px;
+  }
+  
+  .chooseOne {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-10);
+  }
+  
+  .selectionButton {
+    max-width: 500px;
+    min-height: 180px;
+    padding: 2rem;
+  }
+  
+  .iconWrapper {
+    width: 70px;
+    height: 70px;
+    margin-right: var(--space-5);
+  }
+  
+  .icon {
+    font-size: 28px;
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .description {
+    font-size: var(--font-size-base);
+  }
+  
+  .topRightRadio {
+    width: 28px;
+    height: 28px;
+    top: var(--space-5);
+    right: var(--space-5);
+  }
+  
+  .tick {
+    font-size: 14px;
+  }
+  
+  .continueButton {
+    min-height: 60px;
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .userSelection {
+    max-width: 600px;
+  }
+  
+  .roleOptions {
+    gap: var(--space-5);
+  }
+  
+  .selectionButton {
+    min-height: 160px;
+  }
+}

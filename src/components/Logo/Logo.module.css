@@ -1,0 +1,105 @@
+/* Logo Component - Mobile First Design */
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem;
+  position: relative;
+  height: 72px;
+}
+
+.logo {
+  width: auto;
+  height: 48px; /* Increased from 40px */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 4px rgba(221, 46, 13, 0.1));
+}
+
+.logoContainer:hover .logo {
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 8px rgba(221, 46, 13, 0.2));
+}
+
+@media (max-width: 768px) {
+  .logo {
+    height: 40px;
+  }
+}
+
+/* Glowing effect on scroll */
+.scrolled .logo {
+  filter: drop-shadow(0 4px 12px rgba(221, 46, 13, 0.15));
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .logoContainer {
+    height: 100px;
+    margin-bottom: var(--space-8);
+  }
+  
+  .logo {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .logoIcon {
+    width: 60px;
+    height: 60px;
+    margin-right: var(--space-4);
+    font-size: var(--font-size-3xl);
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .logoContainer {
+    height: 120px;
+  }
+  
+  .logo {
+    font-size: 3.5rem;
+  }
+  
+  .logoIcon {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+/* Responsive design */
+@media (min-width: 480px) {
+  .logo {
+    max-width: 250px;
+  }
+}
+
+@media (min-width: 768px) {
+  .logoContainer {
+    padding: 2rem;
+  }
+  
+  .logo {
+    max-width: 280px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logoContainer {
+    padding: 2.5rem;
+  }
+  
+  .logo {
+    max-width: 320px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .logo {
+    filter: drop-shadow(0 4px 6px rgba(255, 255, 255, 0.1));
+  }
+  
+  .logo:hover {
+    filter: drop-shadow(0 6px 8px rgba(255, 255, 255, 0.15));
+  }
+}

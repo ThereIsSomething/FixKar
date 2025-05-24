@@ -1,0 +1,255 @@
+/* Input Component - Mobile First Design */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.required {
+  color: var(--error);
+  font-size: var(--font-size-sm);
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  background: white;
+  color: var(--gray-900);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--gray-400);
+}
+
+.input:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.input:disabled {
+  background: var(--gray-50);
+  color: var(--gray-500);
+  cursor: not-allowed;
+}
+
+.withIcon {
+  padding-left: var(--space-12);
+}
+
+.withRightIcon {
+  padding-right: var(--space-12);
+}
+
+.leftIcon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.focused .leftIcon {
+  color: var(--primary-500);
+}
+
+.rightIcon,
+.passwordToggle {
+  position: absolute;
+  right: var(--space-3);
+  background: none;
+  border: none;
+  color: var(--gray-500);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  font-size: 0.75rem;
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+}
+
+.rightIcon:hover,
+.passwordToggle:hover {
+  color: var(--gray-700);
+  background: var(--gray-100);
+}
+
+.rightIcon:focus-visible,
+.passwordToggle:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 1px;
+}
+
+/* Input states */
+.error .input {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.error .leftIcon {
+  color: var(--error);
+}
+
+.success .input {
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.success .leftIcon {
+  color: var(--success);
+}
+
+.disabled {
+  opacity: 0.6;
+}
+
+/* Feedback messages */
+.feedback {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 20px;
+}
+
+.errorText {
+  color: var(--error);
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.errorText::before {
+  content: '⚠️';
+  font-size: var(--font-size-xs);
+}
+
+.successText {
+  color: var(--success);
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.successText::before {
+  content: '✅';
+  font-size: var(--font-size-xs);
+}
+
+.helperText {
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+}
+
+/* Special input types */
+.input[type="email"] {
+  text-transform: lowercase;
+}
+
+.input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.input[type="number"]::-webkit-outer-spin-button,
+.input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.input[type="search"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.input[type="search"]::-webkit-search-decoration,
+.input[type="search"]::-webkit-search-cancel-button,
+.input[type="search"]::-webkit-search-results-button,
+.input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+.error .input {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .input {
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--font-size-base);
+  }
+  
+  .withIcon {
+    padding-left: var(--space-12);
+  }
+  
+  .withRightIcon {
+    padding-right: var(--space-12);
+  }
+  
+  .leftIcon {
+    left: var(--space-4);
+  }
+  
+  .rightIcon,
+  .passwordToggle {
+    right: var(--space-4);
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .input {
+    padding: var(--space-4) var(--space-6);
+  }
+}
