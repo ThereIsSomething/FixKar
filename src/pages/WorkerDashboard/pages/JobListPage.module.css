@@ -1,0 +1,28 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FDF2F2 0%, #FDF7F7 100%);
+}
+
+.header {
+  background: white;
+  padding: 16px 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #546A7B;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.backButton:hover {
+  color: #435561;
+}

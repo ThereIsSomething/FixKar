@@ -71,6 +71,18 @@ const WorkerDashboard = () => {
     ));
   };
 
+  const handleServiceRequests = () => {
+    navigate('/worker-dashboard/service-requests');
+  };
+
+  const handleActiveTasks = () => {
+    navigate('/worker-dashboard/active-tasks');
+  };
+
+  const handlePastJobs = () => {
+    navigate('/worker-dashboard/past-jobs');
+  };
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
@@ -110,14 +122,14 @@ const WorkerDashboard = () => {
         </section>
 
         <section className={styles.cardGrid}>
-          <div className={styles.card}>
+          <div className={styles.card} onClick={handleServiceRequests}>
             <div className={styles.cardIcon}>
               <FaHandshake />
             </div>
             <span className={styles.cardText}>Service Requests</span>
           </div>
 
-          <div className={styles.card}>
+          <div className={styles.card} onClick={handleActiveTasks}>
             <div className={styles.cardIcon}>
               <FaTasks />
             </div>
@@ -127,7 +139,7 @@ const WorkerDashboard = () => {
             )}
           </div>
 
-          <div className={`${styles.card} ${styles.wideCard}`}>
+          <div className={`${styles.card} ${styles.wideCard}`} onClick={handlePastJobs}>
             <div className={styles.cardIcon}>
               <FaHistory />
             </div>

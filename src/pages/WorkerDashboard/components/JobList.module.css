@@ -1,0 +1,250 @@
+.container {
+  padding: 24px;
+  background: linear-gradient(135deg, #FDF2F2 0%, #FDF7F7 100%);
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1D2939;
+}
+
+.count {
+  color: #667085;
+  font-size: 14px;
+  background: #FFF1F0;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.jobList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.jobCard {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.jobCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.jobCard::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #DD2E0D;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.jobCard:hover::after {
+  opacity: 1;
+}
+
+.jobHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.userName {
+  font-size: 18px;
+  font-weight: 500;
+  color: #1D2939;
+  margin: 0;
+}
+
+.jobType {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Service type-specific colors */
+.jobType[data-type='plumbing'] {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+.jobType[data-type='electrical'] {
+  background: #FCE7F3;
+  color: #BE185D;
+}
+
+.jobType[data-type='carpentry'] {
+  background: #FEF3C7;
+  color: #B45309;
+}
+
+.jobType[data-type='cleaning'] {
+  background: #ECFDF5;
+  color: #047857;
+}
+
+.urgent {
+  color: #EF4444;
+  animation: pulse 2s infinite;
+}
+
+.status {
+  color: #059669;
+}
+
+.rating {
+  color: #F59E0B;
+}
+
+.jobDetails {
+  display: flex;
+  gap: 24px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #667085;
+  font-size: 14px;
+}
+
+.icon {
+  color: #DD2E0D;
+}
+
+.loadingContainer, .errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 16px;
+}
+
+.loader {
+  border: 3px solid #FFF1F0;
+  border-top: 3px solid #DD2E0D;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+.retryButton {
+  background: #DD2E0D;
+  color: white;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.retryButton:hover {
+  background: #C02A0C;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(221, 46, 13, 0.2);
+}
+
+.retryButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.retryButton::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+}
+
+.retryButton:hover::before {
+  width: 150%;
+  height: 150%;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 48px;
+  color: #667085;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  margin: 20px 0;
+  border: 2px dashed #E5E7EB;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .jobDetails {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

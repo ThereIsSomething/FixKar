@@ -10,6 +10,7 @@ import Dashboard from '../pages/Dashboard/Dashboard';
 import UserProfile from '../pages/UserProfile/UserProfile';
 import WorkerDashboard from '../pages/WorkerDashboard/WorkerDashboard';
 import WorkerProfile from '../pages/WorkerProfile/WorkerProfile';
+import JobListPage from '../pages/WorkerDashboard/pages/JobListPage';
 import { SignupProvider, useSignup } from '../context/SignupContext';
 import { TokenProvider } from '../context/TokenContext';
 import { useAxiosInterceptors } from '../hooks/useAxiosInterceptors';
@@ -36,7 +37,8 @@ const SignupRoutes = () => {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/profile" element={<UserProfile />} />
       <Route path="/worker-dashboard" element={<WorkerDashboard />} />
-      <Route path="/workerprofile" element={<WorkerProfile />} />
+      <Route path="/worker-profile" element={<WorkerProfile />} />
+      <Route path="/worker-dashboard/:type" element={<JobListPage />} />
       <Route path="/p" element={<WorkerProfileCompletion />} />
     </Routes>
   );
