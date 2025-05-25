@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Button from '../../components/Button/Button';
 import { useSignup } from '../../context/SignupContext';
 import styles from './OTPVerification.module.css';
@@ -47,7 +48,6 @@ const OTPVerification = () => {
       inputRefs.current[index - 1]?.focus();
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const otpValue = otp.join('');
@@ -59,25 +59,72 @@ const OTPVerification = () => {
 
     setLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      if (otpValue === '123456') { // Mock verification
+    try {
+      // Step 1: Verify OTP
+      const verifyResponse = await axios.post('http://0.0.0.0:8000/signupotp_verify', {
+        email: signupData?.email,
+        otp: otpValue
+      });
+
+      console.log('OTP verification successful:', verifyResponse.data);
+
+      // Step 2: If OTP verification successful (status 200), create the account
+      if (verifyResponse.status === 200) {
+        const signupResponse = await axios.post('http://0.0.0.0:8000/signup', signupData);
+        
+        console.log('Account created successfully:', signupResponse.data);
+        
+        // Set OTP as verified and navigate to role selection
         setOtpVerified(true);
         navigate('/role');
         clearSignupData();
-      } else {
-        setError('Invalid OTP. Please try again.');
-        setOtp(['', '', '', '', '', '']);
-        inputRefs.current[0]?.focus();
       }
-    }, 2000);
-  };
-  const handleResend = () => {
-    setTimeLeft(300);
-    setOtp(['', '', '', '', '', '']);
-    setError('');
-    console.log('Resending OTP to email:', signupData?.email);
+    } catch (error) {
+      console.error('Error during verification/signup:', error);
+      
+      // Handle different types of errors
+      if (error.response) {
+        // Server responded with error status
+        if (error.response.status === 400 || error.response.status === 401) {
+          setError('Invalid OTP. Please try again.');
+        } else {
+          const errorMessage = error.response.data?.message || 'Verification failed. Please try again.';
+          setError(errorMessage);
+        }
+      } else if (error.request) {
+        // Request was made but no response received
+        setError('Unable to connect to server. Please check your internet connection.');
+      } else {
+        // Something else happened
+        setError('An unexpected error occurred. Please try again.');
+      }
+      
+      // Clear OTP inputs and focus on first input
+      setOtp(['', '', '', '', '', '']);
+      inputRefs.current[0]?.focus();
+    } finally {
+      setLoading(false);
+    }
+  };  const handleResend = async () => {
+    try {
+      // Make API call to resend OTP
+      await axios.post('http://0.0.0.0:8000/signupotp', {
+        email: signupData?.email
+      });
+      
+      console.log('OTP resent successfully');
+      
+      // Reset timer and clear inputs
+      setTimeLeft(300);
+      setOtp(['', '', '', '', '', '']);
+      setError('');
+      
+      // Focus on first input
+      inputRefs.current[0]?.focus();
+    } catch (error) {
+      console.error('Error resending OTP:', error);
+      setError('Failed to resend OTP. Please try again.');
+    }
   };
 
   const formatTime = (seconds) => {

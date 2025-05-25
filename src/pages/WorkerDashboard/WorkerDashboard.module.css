@@ -1,7 +1,10 @@
-/* WorkerDashboard.module.css */
+/* WorkerDashboard.module.css - Premium Mobile-First Design */
+
+/* ===== BASE STYLES ===== */
 .dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: linear-gradient(135deg, #fafbff 0%, #f4f6fb 100%);
+  padding: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   overflow-x: hidden;
   position: relative;
@@ -19,7 +22,12 @@
   z-index: 0;
 }
 
-/* Header Styles */
+.dashboard > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== HEADER STYLES ===== */
 .header {
   display: flex;
   justify-content: space-between;
@@ -45,7 +53,7 @@
   gap: 1.5rem;
 }
 
-/* Status Toggle Styles */
+/* ===== STATUS TOGGLE STYLES ===== */
 .statusToggleContainer {
   display: flex;
   align-items: center;
@@ -139,72 +147,148 @@ input:checked + .slider:before {
   font-size: 0.875rem;
 }
 
-/* Profile Button */
+/* ===== PROFILE BUTTON STYLES ===== */
 .profileButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: none;
   border: none;
   color: #546A7B;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
   transition: all 0.2s;
 }
 
 .profileButton:hover {
   background-color: rgba(84, 106, 123, 0.08);
-  transform: scale(1.05);
 }
 
-/* Main Content */
-.main {
+.profileIcon {
+  font-size: 24px;
+}
+
+.profileName {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ===== WELCOME SECTION STYLES ===== */
+.welcomeSection {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-/* Welcome Section */
-.welcomeSection {
-  margin-bottom: 2rem;
 }
 
 .welcomeText {
-  color: #546A7B;
   font-size: 2rem;
   font-weight: 600;
+  color: #546A7B;
   margin-bottom: 0.5rem;
 }
 
 .locationText {
   color: #64748b;
   font-size: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
-/* Loading State */
+/* ===== CARD GRID STYLES ===== */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  padding: 0 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  border: 1px solid rgba(84, 106, 123, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.05);
+  border-color: rgba(84, 106, 123, 0.2);
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(84, 106, 123, 0.08);
+  border-radius: 12px;
+  color: #546A7B;
+  font-size: 1.5rem;
+}
+
+.cardText {
+  font-weight: 500;
+  color: #546A7B;
+  text-align: center;
+}
+
+.wideCard {
+  grid-column: span 2;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #546A7B;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.countText {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+/* ===== LOADING & ERROR STATES ===== */
 .loadingContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  gap: 1rem;
-  color: #546A7B;
+  height: 100vh;
+  background: linear-gradient(135deg, #fafbff 0%, #f4f6fb 100%);
+  text-align: center;
+  padding: 2rem;
 }
 
 .loader {
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #546A7B;
+  width: 56px;
+  height: 56px;
+  border: 4px solid rgba(84, 106, 123, 0.1);
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  border-top: 4px solid #546A7B;
   animation: spin 1s linear infinite;
+  margin-bottom: 28px;
+  filter: drop-shadow(0 4px 12px rgba(84, 106, 123, 0.2));
 }
 
 @keyframes spin {
@@ -212,49 +296,61 @@ input:checked + .slider:before {
   100% { transform: rotate(360deg); }
 }
 
-/* Error State */
 .errorContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  gap: 1rem;
-  color: #546A7B;
   text-align: center;
   padding: 2rem;
+  color: #546A7B;
 }
 
 .retryButton {
-  padding: 10px 20px;
-  background-color: #546A7B;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: #546A7B;
   color: white;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-weight: 500;
+  cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .retryButton:hover {
-  background-color: #435561;
+  background: #435561;
 }
 
-/* Responsive Design */
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .header {
     padding: 0 1rem;
   }
-  
-  .main {
+
+  .welcomeSection,
+  .cardGrid {
     padding: 1rem;
   }
-  
+
   .welcomeText {
     font-size: 1.5rem;
   }
-  
-  .headerLeft {
-    gap: 1rem;
+
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .wideCard {
+    grid-column: span 1;
+  }
+
+  .statusToggleContainer {
+    padding: 4px 8px;
+  }
+
+  .profileName {
+    display: none;
   }
 }

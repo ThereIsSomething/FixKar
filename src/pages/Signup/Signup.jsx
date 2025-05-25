@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import axios from 'axios';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import {useSignup} from '../../context/SignupContext';
@@ -62,20 +63,44 @@ const Signup = () => {    const [formData, setFormData] = useState({
             newErrors.confirmPassword = 'Please confirm your password';
         } else if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'Passwords do not match';
-        }
-
-        if (Object.keys(newErrors).length > 0) {
+        }        if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             setLoading(false);
             return;
         }
 
-        // Simulate API call
-        setTimeout(() => {
-            setLoading(false);
+        try {
+            // Make API call to send OTP
+            console.log('hello');
+            const response = await axios.post('http://0.0.0.0:8000/signupotp', {
+                email: formData.email
+            });
+
+            console.log('OTP sent successfully:', response.data);
+            
+            // Store signup data in context
             setSignupData(formData);
+            
+            // Navigate to OTP verification page
             navigate('/otp');
-        }, 2000);
+        } catch (error) {
+            console.error('Error sending OTP:', error);
+            
+            // Handle different types of errors
+            if (error.response) {
+                // Server responded with error status
+                const errorMessage = error.response.data?.message || 'Failed to send OTP. Please try again.';
+                setErrors({ email: errorMessage });
+            } else if (error.request) {
+                // Request was made but no response received
+                setErrors({ email: 'Unable to connect to server. Please check your internet connection.' });
+            } else {
+                // Something else happened
+                setErrors({ email: 'An unexpected error occurred. Please try again.' });
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const getPasswordStrength = (password) => {
