@@ -15,6 +15,8 @@ import { SignupProvider, useSignup } from '../context/SignupContext';
 import { TokenProvider } from '../context/TokenContext';
 import { useAxiosInterceptors } from '../hooks/useAxiosInterceptors';
 import WorkerProfileCompletion from '../pages/WorkerProfileCompletion/WorkerProfileCompletion';
+import ServiceWorkers from '../pages/ServiceWorkers/ServiceWorkers';
+import ChatPage from '../pages/ChatPage/ChatPage';
 
 const SignupRoutes = () => {
   const { signupData, setSignupData, otpVerified, setOtpVerified, setRole } = useSignup();
@@ -40,6 +42,8 @@ const SignupRoutes = () => {
       <Route path="/worker-profile" element={<WorkerProfile />} />
       <Route path="/worker-dashboard/:type" element={<JobListPage />} />
       <Route path="/p" element={<WorkerProfileCompletion />} />
+      <Route path="/hire-service" element={<ServiceWorkers />} />
+      <Route path="/chat/:workerId" element={<ChatPage />} />
     </Routes>
   );
 };

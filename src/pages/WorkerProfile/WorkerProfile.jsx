@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaPencilAlt, FaArrowLeft } from 'react-icons/fa';
 import Logo from '../../components/Logo/Logo';
+import instance from '../../utils/apiClient';
+import { useAxiosInterceptors } from '../../hooks/useAxiosInterceptors';
 import styles from './WorkerProfile.module.css';
 
 const WorkerProfile = () => {
@@ -10,21 +12,63 @@ const WorkerProfile = () => {
   const [editMode, setEditMode] = useState({
     name: false,
     email: false,
-    mobile: false
+    phone_no: false
   });
   const [errors, setErrors] = useState({});
   const [tempValues, setTempValues] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Initialize axios interceptors
+  useAxiosInterceptors();
+
+  // Session storage helpers
+  const getWorkerProfileFromStorage = () => {
+    const cached = sessionStorage.getItem('workerProfile');
+    return cached ? JSON.parse(cached) : null;
+  };
+
+  const saveWorkerProfile = (data) => {
+    sessionStorage.setItem('workerProfile', JSON.stringify(data));
+  };
 
   useEffect(() => {
-    const profile = sessionStorage.getItem('userData');
-    if (profile) {
-      const parsedProfile = JSON.parse(profile);
-      setWorkerProfile(parsedProfile);
-      setTempValues(parsedProfile);
-    } else {
-      navigate('/login');
-    }
-  }, [navigate]);
+    const loadWorkerProfile = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // First check for cached profile data from session storage
+        const cachedProfile = getWorkerProfileFromStorage();
+        
+        if (cachedProfile) {
+          console.log('Using cached worker profile from session storage:', cachedProfile);
+          setWorkerProfile(cachedProfile);
+          setTempValues(cachedProfile);
+          setLoading(false);
+        } else {
+          // Fallback to API if no cached data (shouldn't happen normally)
+          console.log('No cached profile found, fetching from API...');
+          const response = await instance.get('/userdetails');
+          console.log('Worker profile API response:', response.data);
+          
+          const profileData = response.data.profile || response.data;
+          console.log('Extracted profile data:', profileData);
+          
+          setWorkerProfile(profileData);
+          setTempValues(profileData);
+          saveWorkerProfile(profileData);
+        }
+      } catch (err) {
+        console.error('Error loading worker profile:', err);
+        setError('Failed to load profile data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadWorkerProfile();
+  }, []);
 
   const validateField = (field, value) => {
     switch (field) {
@@ -34,7 +78,7 @@ const WorkerProfile = () => {
           return 'Please enter a valid email address';
         }
         break;
-      case 'mobile':
+      case 'phone_no':
         const mobileRegex = /^\d{10}$/;
         if (!mobileRegex.test(value)) {
           return 'Please enter a valid 10-digit mobile number';
@@ -89,7 +133,8 @@ const WorkerProfile = () => {
       [field]: value
     };
 
-    sessionStorage.setItem('userData', JSON.stringify(updatedProfile));
+    // Update session storage with the new data
+    saveWorkerProfile(updatedProfile);
     setWorkerProfile(updatedProfile);
     setEditMode(prev => ({
       ...prev,
@@ -100,6 +145,50 @@ const WorkerProfile = () => {
       [field]: ''
     }));
   };
+
+  const handleRetry = () => {
+    sessionStorage.removeItem('workerProfile');
+    setError(null);
+    setLoading(true);
+    
+    const loadWorkerProfile = async () => {
+      try {
+        const response = await instance.get('/userdetails');
+        const profileData = response.data.profile || response.data;
+        setWorkerProfile(profileData);
+        setTempValues(profileData);
+        saveWorkerProfile(profileData);
+      } catch (err) {
+        console.error('Error on retry:', err);
+        setError('Failed to load profile data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadWorkerProfile();
+  };
+
+  if (loading) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.loader}></div>
+        <p>Loading your profile...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.errorContainer}>
+        <h2>Something went wrong</h2>
+        <p>We couldn't load your profile information</p>
+        <button onClick={handleRetry} className={styles.retryButton}>
+          Try Again
+        </button>
+      </div>
+    );
+  }
 
   if (!workerProfile) {
     return (
@@ -204,37 +293,37 @@ const WorkerProfile = () => {
           <div className={styles.fieldGroup}>
             <label>Mobile</label>
             <div className={styles.fieldContent}>
-              {editMode.mobile ? (
+              {editMode.phone_no ? (
                 <div className={styles.editField}>
                   <input
                     type="tel"
-                    value={tempValues.mobile || ''}
-                    onChange={(e) => handleChange('mobile', e.target.value)}
-                    className={`${styles.input} ${errors.mobile ? styles.inputError : ''}`}
+                    value={tempValues.phone_no || ''}
+                    onChange={(e) => handleChange('phone_no', e.target.value)}
+                    className={`${styles.input} ${errors.phone_no ? styles.inputError : ''}`}
                     autoFocus
                     maxLength="10"
                   />
                   <button 
                     className={styles.saveButton}
-                    onClick={() => handleSave('mobile')}
-                    disabled={!!errors.mobile}
+                    onClick={() => handleSave('phone_no')}
+                    disabled={!!errors.phone_no}
                   >
                     Save
                   </button>
                 </div>
               ) : (
                 <>
-                  <span>{workerProfile.mobile}</span>
+                  <span>{workerProfile.phone_no}</span>
                   <button 
                     className={styles.editButton}
-                    onClick={() => handleEdit('mobile')}
+                    onClick={() => handleEdit('phone_no')}
                   >
                     <FaPencilAlt />
                   </button>
                 </>
               )}
             </div>
-            {errors.mobile && <span className={styles.errorText}>{errors.mobile}</span>}
+            {errors.phone_no && <span className={styles.errorText}>{errors.phone_no}</span>}
           </div>
         </div>
       </main>

@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from '../../utils/apiClient';
+import instance from '../../utils/apiClient';
 import Button from '../../components/Button/Button';
 import { useSignup } from '../../context/SignupContext';
 import styles from './OTPVerification.module.css';
@@ -61,7 +61,7 @@ const OTPVerification = () => {
     
     try {
       // Step 1: Verify OTP
-      const verifyResponse = await apiClient.post('/signupotp_verify', {
+      const verifyResponse = await instance.post('/signupotp_verify', {
         email: signupData?.email,
         phone_no:signupData?.phone ,
         password:signupData?.password ,
@@ -112,7 +112,7 @@ const OTPVerification = () => {
   };  const handleResend = async () => {
     try {
       // Make API call to resend OTP
-      await apiClient.post('/signupotp', {
+      await instance.post('/signupotp', {
         email: signupData?.email
       });
       

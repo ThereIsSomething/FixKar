@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import apiClient from '../../utils/apiClient';
+import instance from '../../utils/apiClient';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import {useSignup} from '../../context/SignupContext';
@@ -73,7 +73,7 @@ const Signup = () => {    const [formData, setFormData] = useState({
         try {
             // Make API call to send OTP
             console.log('hello');
-            const response = await apiClient.post('/signupotp', {
+            const response = await instance.post('/signupotp', {
                 email: formData.email
             });
 

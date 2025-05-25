@@ -77,9 +77,8 @@ export const TokenProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error refreshing token:', error);
-      // If refresh fails, clear all tokens and redirect to login
+      // If refresh fails, clear all tokens
       clearTokens();
-      navigate('/login');
       throw error;
     }
   };

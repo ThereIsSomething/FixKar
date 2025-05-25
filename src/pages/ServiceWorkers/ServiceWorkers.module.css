@@ -1,0 +1,259 @@
+/* ServiceWorkers.module.css */
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fafbff 0%, #f4f6fb 100%);
+}
+
+.header {
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #475569;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.serviceFilters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.filterButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+.filterButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.filterButton.active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.workersList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fafbff 0%, #f4f6fb 100%);
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(221, 46, 13, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #dd2e0d;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #fafbff 0%, #f4f6fb 100%);
+}
+
+.retryButton {
+  background: linear-gradient(135deg, #dd2e0d 0%, #f73517 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.retryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(221, 46, 13, 0.2);
+}
+
+.workerCard {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.workerCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+}
+
+.workerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.workerInfo h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1e293b;
+}
+
+.workerHeader {
+  margin-bottom: 0.5rem;
+}
+
+.profession {
+  color: #64748b;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  text-transform: capitalize;
+}
+
+.location {
+  color: #94a3b8;
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #1e293b;
+}
+
+.starIcon {
+  color: #eab308;
+}
+
+.ratingCount {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.hireButton {
+  background: linear-gradient(135deg, #dd2e0d 0%, #f73517 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.hireButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(221, 46, 13, 0.2);
+}
+
+.noWorkersMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  width: 100%;
+  min-height: 200px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.noWorkersMessage p {
+  color: #64748b;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 1rem;
+  }
+  
+  .serviceFilters {
+    padding-bottom: 1rem;
+  }
+  
+  .workersList {
+    grid-template-columns: 1fr;
+  }
+}

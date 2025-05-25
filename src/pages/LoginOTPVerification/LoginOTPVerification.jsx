@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from './LoginOTPVerification.module.css';
-import apiClient from '../../utils/apiClient';
+import instance from '../../utils/apiClient';
 import { useToken } from '../../context/TokenContext';
 
 const LoginOTPVerification = () => {
@@ -56,7 +56,7 @@ const LoginOTPVerification = () => {
 
     try {
       // Make API call to verify OTP
-      const response = await apiClient.post('/verification', {
+      const response = await instance.post('/verification', {
         email: email,
         otp: otp
       });
@@ -67,7 +67,7 @@ const LoginOTPVerification = () => {
         const userData = response.data;
         
         // Save tokens using TokenContext
-        saveTokens(userData.access_token, userData.refresh_token);
+        saveTokens(userData.access, userData.refresh);
         
         // Store other user data
         localStorage.setItem('userData', JSON.stringify(userData));
@@ -99,7 +99,7 @@ const LoginOTPVerification = () => {
     setLoading(true);
     try {
       // Make API call to resend OTP
-      const response = await apiClient.post('/login', {
+      const response = await instance.post('/login', {
         email: email
       });
 

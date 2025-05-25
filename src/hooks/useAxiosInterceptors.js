@@ -1,13 +1,11 @@
 import { useEffect } from 'react';
 import { useToken } from '../context/TokenContext';
-import { setupAxiosInterceptors } from '../utils/apiClient';
 
 export const useAxiosInterceptors = () => {
   const tokenContext = useToken();
 
-  useEffect(() => {
-    setupAxiosInterceptors(tokenContext);
-  }, [tokenContext.accessToken, tokenContext.refreshToken]);
+  // Note: Interceptors are now handled internally by the apiClient instance
+  // No need to manually setup interceptors here anymore
 
   return tokenContext;
 };

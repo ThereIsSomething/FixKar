@@ -53,6 +53,103 @@
   filter: drop-shadow(0px 2px 4px rgba(221, 46, 13, 0.2));
 }
 
+/* ===== TOGGLE BUTTON STYLES ===== */
+.toggleContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 24px;
+}
+
+.toggle {
+  width: 52px;
+  height: 28px;
+  background-color: #e2e8f0;
+  border-radius: 14px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid #cbd5e1;
+}
+
+.toggle:hover {
+  transform: scale(1.05);
+}
+
+.toggleActive {
+  background-color: #22c55e;
+  border-color: #16a34a;
+}
+
+.toggleSlider {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggleActive .toggleSlider {
+  transform: translateX(24px);
+}
+
+.liveDot {
+  width: 12px;
+  height: 12px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  position: relative;
+  animation: pulse 2s infinite;
+}
+
+.liveDot::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 20px;
+  height: 20px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: ping 2s infinite;
+}
+
+.statusText {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  transition: color 0.3s ease;
+}
+
+.toggleActive ~ .statusText {
+  color: #22c55e;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
 /* ===== WELCOME SECTION STYLES ===== */
 .welcomeSection {
   margin-bottom: 40px;
@@ -324,6 +421,47 @@ input:checked + .slider:before {
   animation: spin 1s linear infinite;
 }
 
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.errorContainer h2 {
+  color: #DD2E0D;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.errorContainer p {
+  color: #666;
+  margin: 0;
+  font-size: 16px;
+}
+
+.retryButton {
+  background: #DD2E0D;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retryButton:hover {
+  background: #B8250A;
+  transform: translateY(-2px);
+}
+
 /* ===== ANIMATIONS ===== */
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -374,6 +512,36 @@ input:checked + .slider:before {
 
   .content {
     padding: 16px 16px 72px 16px;
+  }
+
+  .toggleContainer {
+    margin-left: 16px;
+    gap: 8px;
+  }
+
+  .toggle {
+    width: 44px;
+    height: 24px;
+  }
+
+  .toggleSlider {
+    width: 16px;
+    height: 16px;
+    top: 2px;
+    left: 2px;
+  }
+
+  .toggleActive .toggleSlider {
+    transform: translateX(18px);
+  }
+
+  .statusText {
+    font-size: 12px;
+  }
+
+  .liveDot {
+    width: 10px;
+    height: 10px;
   }
 
   .welcomeText {

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from './Login.module.css';
-import apiClient from '../../utils/apiClient';
+import instance from '../../utils/apiClient';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const Login = () => {
 
     try {
       // Make API call to backend for login
-      const response = await apiClient.post('/login', {
+      const response = await instance.post('/login', {
         email: email
       });
 

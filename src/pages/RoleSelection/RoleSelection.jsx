@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import style from './RoleSelection.module.css';
 import { useSignup } from '../../context/SignupContext';
 import { useNavigate,useLocation } from 'react-router-dom';
-import apiClient from '../../utils/apiClient';
+import instance from '../../utils/apiClient';
 // import workericon from '../../assets/workericon.svg'; // Uncomment and provide icon if available
 
 
@@ -22,7 +22,7 @@ const RoleSelection = ({ onSelect }) => {
   const handleContinue = async () => {
     try {
       // Make API call to backend
-      const response = await apiClient.post('/role', {
+      const response = await instance.post('/role', {
         email: email,
         role: selected
       });

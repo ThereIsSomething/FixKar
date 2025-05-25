@@ -10,14 +10,33 @@ const UserProfile = () => {
   const [editMode, setEditMode] = useState({
     name: false,
     email: false,
-    mobile: false
+    phone_no: false
   });
 
   useEffect(() => {
-    // Get user profile from session storage
+    // Get user profile and details from session storage
     const profile = sessionStorage.getItem('userProfile');
-    if (profile) {
-      setUserProfile(JSON.parse(profile));
+    const userDetails = sessionStorage.getItem('userDetails');
+    
+    if (profile && userDetails) {
+      const profileData = JSON.parse(profile);
+      const detailsData = JSON.parse(userDetails);
+      
+      // Combine both data sources and flatten the profile data
+      const combinedProfile = {
+        ...profileData,
+        ...detailsData
+      };
+      
+      // Extract email and phone from nested profile object if it exists
+      if (combinedProfile.profile) {
+        combinedProfile.email = combinedProfile.profile.email;
+        combinedProfile.phone_no = combinedProfile.profile.phone_no;
+        combinedProfile.phone = combinedProfile.profile.phone_no; // Add phone alias for consistency
+      }
+      
+      console.log('Combined profile in UserProfile:', combinedProfile);
+      setUserProfile(combinedProfile);
     } else {
       navigate('/dashboard');
     }
@@ -38,8 +57,48 @@ const UserProfile = () => {
       [field]: value
     };
 
-    // Update session storage
-    sessionStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+    // Also update the nested profile object
+    if (updatedProfile.profile) {
+      if (field === 'email') {
+        updatedProfile.profile.email = value;
+      } else if (field === 'phone' || field === 'phone_no') {
+        updatedProfile.profile.phone_no = value;
+        updatedProfile.phone = value; // Keep both for consistency
+        updatedProfile.phone_no = value;
+      } else if (field === 'name') {
+        updatedProfile.profile.name = value;
+      }
+    }
+
+    // Update both session storage entries
+    const profileData = JSON.parse(sessionStorage.getItem('userProfile') || '{}');
+    const userDetailsData = JSON.parse(sessionStorage.getItem('userDetails') || '{}');
+    
+    // Update the appropriate storage based on field
+    if (field === 'name') {
+      profileData[field] = value;
+      if (profileData.profile) {
+        profileData.profile.name = value;
+      }
+      sessionStorage.setItem('userProfile', JSON.stringify(profileData));
+    }
+    
+    if (field === 'email' || field === 'phone' || field === 'phone_no') {
+      if (field === 'email') {
+        userDetailsData.email = value;
+        if (userDetailsData.profile) {
+          userDetailsData.profile.email = value;
+        }
+      } else {
+        userDetailsData.phone_no = value;
+        userDetailsData.phone = value;
+        if (userDetailsData.profile) {
+          userDetailsData.profile.phone_no = value;
+        }
+      }
+      sessionStorage.setItem('userDetails', JSON.stringify(userDetailsData));
+    }
+
     setUserProfile(updatedProfile);
     setEditMode(prev => ({
       ...prev,
@@ -127,19 +186,19 @@ const UserProfile = () => {
             <div className={styles.fieldGroup}>
               <label>Mobile Number</label>
               <div className={styles.fieldContent}>
-                {editMode.mobile ? (
+                {editMode.phone_no ? (
                   <input
                     type="tel"
-                    defaultValue={userProfile.mobile || ''}
-                    onBlur={(e) => handleSave('mobile', e.target.value)}
+                    defaultValue={userProfile.phone_no || userProfile.phone || ''}
+                    onBlur={(e) => handleSave('phone_no', e.target.value)}
                     autoFocus
                   />
                 ) : (
                   <>
-                    <span>{userProfile.mobile || 'Not set'}</span>
+                    <span>{userProfile.phone_no || userProfile.phone || 'Not set'}</span>
                     <button 
                       className={styles.editButton}
-                      onClick={() => handleEdit('mobile')}
+                      onClick={() => handleEdit('phone_no')}
                     >
                       <FaPencilAlt />
                     </button>
@@ -147,6 +206,24 @@ const UserProfile = () => {
                 )}
               </div>
             </div>
+
+            {userProfile.id && (
+              <div className={styles.fieldGroup}>
+                <label>User ID</label>
+                <div className={styles.fieldContent}>
+                  <span>{userProfile.id}</span>
+                </div>
+              </div>
+            )}
+
+            {userProfile.joinedDate && (
+              <div className={styles.fieldGroup}>
+                <label>Member Since</label>
+                <div className={styles.fieldContent}>
+                  <span>{new Date(userProfile.joinedDate).toLocaleDateString()}</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </main>

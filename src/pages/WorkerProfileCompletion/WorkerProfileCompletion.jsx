@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import instance from '../../utils/apiClient';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from './WorkerProfileCompletion.module.css';
@@ -14,18 +15,11 @@ const WorkerProfileCompletion = () => {
   const [error, setError] = useState('');
   
   const [formData, setFormData] = useState({
-    profilePhoto: null,
-    idProofPhoto: null,
     skillCategory: '',
     skillDescription: '',
     city: '',
     pincode: '',
     state: ''
-  });
-
-  const [previews, setPreviews] = useState({
-    profile: '',
-    idProof: ''
   });
 
   useEffect(() => {
@@ -52,28 +46,6 @@ const WorkerProfileCompletion = () => {
     }
   };
 
-  const handleFileChange = (e, type) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        setError(`${type === 'profile' ? 'Profile photo' : 'ID proof'} must be less than 5MB`);
-        return;
-      }
-
-      setFormData(prev => ({
-        ...prev,
-        [type === 'profile' ? 'profilePhoto' : 'idProofPhoto']: file
-      }));
-
-      // Create preview URL
-      const url = URL.createObjectURL(file);
-      setPreviews(prev => ({
-        ...prev,
-        [type]: url
-      }));
-    }
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -89,44 +61,68 @@ const WorkerProfileCompletion = () => {
     setError('');
 
     // Validation
-    if (!formData.profilePhoto) {
-      setError('Please upload a profile photo');
-      setLoading(false);
-      return;
-    }
-
-    if (!formData.idProofPhoto) {
-      setError('Please upload your government ID proof');
-      setLoading(false);
-      return;
-    }
-
     if (!formData.skillCategory) {
       setError('Please select your skill category');
       setLoading(false);
       return;
     }
 
+    if (!formData.skillDescription.trim()) {
+      setError('Please provide a skill description');
+      setLoading(false);
+      return;
+    }
+
     try {
-      // Create FormData object for file upload
-      const submitData = new FormData();
-      submitData.append('profilePhoto', formData.profilePhoto);
-      submitData.append('idProofPhoto', formData.idProofPhoto);
-      submitData.append('skillCategory', formData.skillCategory);
-      submitData.append('skillDescription', formData.skillDescription);
-      submitData.append('city', formData.city);
-      submitData.append('pincode', formData.pincode);
-      submitData.append('state', formData.state);
+      // Create JSON object for submission (no files)
+      const submitData = {
+        skill_name: formData.skillCategory,
+        skill_description: formData.skillDescription,
+        city: formData.city,
+        state: formData.state,
+        pincode: formData.pincode
+      };
 
-      // Mock API call - replace with your actual API endpoint
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Form submitted:', Object.fromEntries(submitData));
+      console.log('Submitting worker profile data:');
+      console.log('Skill name:', formData.skillCategory);
+      console.log('Skill description:', formData.skillDescription);
+      console.log('City:', formData.city);
+      console.log('State:', formData.state);
+      console.log('Pincode:', formData.pincode);
 
-      // Navigate to appropriate page after success
-      // navigate('/worker-dashboard');
+      // Make API call to backend with JSON data
+      const response = await instance.post('/worker/upload_documents', submitData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Worker profile submission response:', response.data);
+
+      // Navigate to worker dashboard after successful submission
+      navigate('/worker-dashboard');
       
     } catch (err) {
-      setError('Failed to submit profile. Please try again.');
+      console.error('Failed to submit worker profile:', err);
+      
+      // Detailed error logging for debugging
+      if (err.response) {
+        console.error('Error status:', err.response.status);
+        console.error('Error headers:', err.response.headers);
+        console.error('Error data:', err.response.data);
+        
+        if (err.response.data && err.response.data.message) {
+          setError(`Backend Error: ${err.response.data.message}`);
+        } else {
+          setError(`HTTP ${err.response.status}: Failed to submit profile`);
+        }
+      } else if (err.request) {
+        console.error('No response received:', err.request);
+        setError('No response from server. Please check your connection.');
+      } else {
+        console.error('Request setup error:', err.message);
+        setError('Request failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -139,62 +135,6 @@ const WorkerProfileCompletion = () => {
         <p className={styles.subtitle}>Fill in your details to start accepting jobs</p>
 
         <form className={styles.form} onSubmit={handleSubmit}>
-          {/* Profile Photo Upload */}
-          <div className={styles.photoUpload}>
-            <div className={styles.photoPreview}>
-              {previews.profile ? (
-                <img src={previews.profile} alt="Profile preview" />
-              ) : (
-                <div className={styles.photoPlaceholder}>
-                  <i className="fas fa-user"></i>
-                </div>
-              )}
-            </div>
-            <Button
-              variant="outline"
-              onClick={() => document.getElementById('profilePhotoInput').click()}
-              type="button"
-            >
-              Upload Profile Photo
-            </Button>
-            <input
-              id="profilePhotoInput"
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileChange(e, 'profile')}
-              className={styles.hiddenInput}
-            />
-            <p className={styles.helperText}>Maximum file size: 5MB</p>
-          </div>
-
-          {/* ID Proof Photo Upload */}
-          <div className={styles.photoUpload}>
-            <div className={styles.photoPreview}>
-              {previews.idProof ? (
-                <img src={previews.idProof} alt="ID proof preview" />
-              ) : (
-                <div className={styles.photoPlaceholder}>
-                  <i className="fas fa-id-card"></i>
-                </div>
-              )}
-            </div>
-            <Button
-              variant="outline"
-              onClick={() => document.getElementById('idProofInput').click()}
-              type="button"
-            >
-              Upload Government ID
-            </Button>
-            <input
-              id="idProofInput"
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileChange(e, 'idProof')}
-              className={styles.hiddenInput}
-            />
-            <p className={styles.helperText}>Upload any valid government ID (Maximum file size: 5MB)</p>
-          </div>
-
           {/* Skill Category */}
           <div className={styles.formGroup}>
             <label>Skill Category</label>

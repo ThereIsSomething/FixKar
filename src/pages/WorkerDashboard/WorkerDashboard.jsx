@@ -4,6 +4,8 @@ import axios from 'axios';
 import { FaUserCircle, FaHandshake, FaTasks, FaHistory, FaStar } from 'react-icons/fa';
 import { MdLocationOn } from 'react-icons/md';
 import Logo from '../../components/Logo/Logo';
+import instance from '../../utils/apiClient';
+import { useAxiosInterceptors } from '../../hooks/useAxiosInterceptors';
 import styles from './WorkerDashboard.module.css';
 
 const WorkerDashboard = () => {
@@ -11,6 +13,26 @@ const WorkerDashboard = () => {
   const [workerProfile, setWorkerProfile] = useState(null);
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isOnline, setIsOnline] = useState(false);
+
+  // Initialize axios interceptors
+  useAxiosInterceptors();
+
+  // Fetch worker profile from backend API - always fresh data
+  const fetchWorkerProfile = async () => {
+    try {
+      console.log('Fetching worker profile from /userdetails...');
+      const response = await instance.get('/userdetails');
+      console.log('Worker profile API response:', response.data);
+      
+      // Return exactly what the backend sends, no modifications
+      return response.data;
+    } catch (err) {
+      console.error('Failed to fetch worker profile:', err);
+      throw err;
+    }
+  };
 
   const fetchLocation = async () => {
     try {
@@ -26,34 +48,32 @@ const WorkerDashboard = () => {
   useEffect(() => {
     const loadDashboard = async () => {
       try {
-        // Get cached data
-        const cachedProfile = sessionStorage.getItem('workerProfile');
-        const cachedLocation = sessionStorage.getItem('workerLocation');
+        setLoading(true);
+        setError(null);
 
-        if (cachedProfile) {
-          setWorkerProfile(JSON.parse(cachedProfile));
-        } else {
-          // Mock data to match the design
-          const mockProfile = {
-            name: 'Peter Johnson',
-            services: {
-              active: 3,
-              completed: 6
-            },
-            rating: {
-              average: 4.8,
-              total: 156
-            }
-          };
-          setWorkerProfile(mockProfile);
-          sessionStorage.setItem('workerProfile', JSON.stringify(mockProfile));
+        // Always fetch fresh data from API - no caching
+        console.log('Fetching fresh worker profile from API...');
+        const profileData = await fetchWorkerProfile();
+        console.log('Fresh worker profile:', profileData);
+        
+        // Store the profile data in session storage
+        if (profileData && profileData.profile) {
+          sessionStorage.setItem('workerProfile', JSON.stringify(profileData.profile));
+          console.log('Worker profile stored in session storage:', profileData.profile);
         }
+        
+        setWorkerProfile(profileData);
 
+        // Handle location (can still use cache for location)
+        const cachedLocation = sessionStorage.getItem('workerLocation');
         if (cachedLocation) {
           setLocation(JSON.parse(cachedLocation));
         } else {
           await fetchLocation();
         }
+      } catch (err) {
+        console.error('Error loading worker dashboard:', err);
+        setError('Failed to load dashboard data');
       } finally {
         setLoading(false);
       }
@@ -83,11 +103,82 @@ const WorkerDashboard = () => {
     navigate('/worker-dashboard/past-jobs');
   };
 
+  const handleToggleOnline = async () => {
+    const newStatus = !isOnline;
+    
+    try {
+      console.log('Toggling worker status to:', newStatus ? 'online' : 'offline');
+      
+      // Make API call to toggle endpoint
+      const response = await instance.post('toggle', {
+        status: newStatus ? 'online' : 'offline'
+      });
+      
+      console.log('Toggle API response:', response.data);
+      
+      // Update local state only after successful API call
+      setIsOnline(newStatus);
+      
+      // Log the message from backend
+      if (response.data.message) {
+        console.log('Backend message:', response.data.message);
+      }
+      
+    } catch (err) {
+      console.error('Failed to toggle worker status:', err);
+      // Show error message or handle error appropriately
+      alert('Failed to update your status. Please try again.');
+    }
+  };
+
+  // Handle retry on error
+  const handleRetry = () => {
+    // Clear cached data and reload
+    sessionStorage.removeItem('workerProfile');
+    setError(null);
+    setLoading(true);
+    
+    const loadDashboard = async () => {
+      try {
+        const profileData = await fetchWorkerProfile();
+        
+        // Store the profile data in session storage
+        if (profileData && profileData.profile) {
+          sessionStorage.setItem('workerProfile', JSON.stringify(profileData.profile));
+          console.log('Worker profile stored in session storage on retry:', profileData.profile);
+        }
+        
+        setWorkerProfile(profileData);
+        
+        await fetchLocation();
+      } catch (err) {
+        console.error('Error on retry:', err);
+        setError('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadDashboard();
+  };
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loader} />
         <p>Loading your dashboard...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.errorContainer}>
+        <h2>Something went wrong</h2>
+        <p>We couldn't load your dashboard information</p>
+        <button onClick={handleRetry} className={styles.retryButton}>
+          Try Again
+        </button>
       </div>
     );
   }
@@ -98,11 +189,23 @@ const WorkerDashboard = () => {
         <header className={styles.header}>
           <div className={styles.headerLeft}>
             <Logo />
+            <div className={styles.toggleContainer}>
+              <div 
+                className={`${styles.toggle} ${isOnline ? styles.toggleActive : ''}`}
+                onClick={handleToggleOnline}
+              >
+                <div className={styles.toggleSlider}></div>
+              </div>
+              {isOnline && <div className={styles.liveDot}></div>}
+              <span className={styles.statusText}>
+                {isOnline ? 'Live' : 'Offline'}
+              </span>
+            </div>
           </div>
           <div className={styles.headerRight}>
             <button 
               className={styles.profileButton}
-              onClick={() => navigate('/workerprofile')}
+              onClick={() => navigate('/worker-profile')}
             >
               <FaUserCircle className={styles.profileIcon} />
             </button>
@@ -111,7 +214,7 @@ const WorkerDashboard = () => {
 
         <section className={styles.welcomeSection}>
           <h1 className={styles.welcomeText}>
-            Hi {workerProfile?.name}
+            Hi {workerProfile?.profile?.name || 'Worker'}
           </h1>
           {location && (
             <div className={styles.locationText}>
@@ -145,7 +248,7 @@ const WorkerDashboard = () => {
             </div>
             <span className={styles.cardText}>Past Jobs</span>
             <span className={styles.countText}>
-              {workerProfile?.services?.completed || 6} services
+              {workerProfile?.services?.completed || 0} services
             </span>
           </div>
         </section>
@@ -156,11 +259,11 @@ const WorkerDashboard = () => {
           <div className={styles.ratingStars}>
             {renderStars(workerProfile?.rating?.average || 0)}
             <span className={styles.ratingNumber}>
-              {workerProfile?.rating?.average.toFixed(1)}
+              {workerProfile?.rating?.average ? workerProfile.rating.average.toFixed(1) : '0.0'}
             </span>
           </div>
           <div className={styles.ratingTotal}>
-            {workerProfile?.rating?.total} ratings
+            {workerProfile?.rating?.total || 0} ratings
           </div>
         </div>
       </footer>
