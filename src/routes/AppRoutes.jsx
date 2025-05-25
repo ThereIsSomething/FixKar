@@ -11,10 +11,16 @@ import UserProfile from '../pages/UserProfile/UserProfile';
 import WorkerDashboard from '../pages/WorkerDashboard/WorkerDashboard';
 import WorkerProfile from '../pages/WorkerProfile/WorkerProfile';
 import { SignupProvider, useSignup } from '../context/SignupContext';
+import { TokenProvider } from '../context/TokenContext';
+import { useAxiosInterceptors } from '../hooks/useAxiosInterceptors';
 import WorkerProfileCompletion from '../pages/WorkerProfileCompletion/WorkerProfileCompletion';
 
 const SignupRoutes = () => {
   const { signupData, setSignupData, otpVerified, setOtpVerified, setRole } = useSignup();
+  
+  
+  useAxiosInterceptors();
+  
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
@@ -38,9 +44,11 @@ const SignupRoutes = () => {
 
 const AppRoutes = () => (
   <Router>
-    <SignupProvider>
-      <SignupRoutes />
-    </SignupProvider>
+    <TokenProvider>
+      <SignupProvider>
+        <SignupRoutes />
+      </SignupProvider>
+    </TokenProvider>
   </Router>
 );
 

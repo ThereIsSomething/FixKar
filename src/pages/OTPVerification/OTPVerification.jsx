@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../../utils/apiClient';
 import Button from '../../components/Button/Button';
 import { useSignup } from '../../context/SignupContext';
 import styles from './OTPVerification.module.css';
@@ -61,22 +61,26 @@ const OTPVerification = () => {
     
     try {
       // Step 1: Verify OTP
-      const verifyResponse = await axios.post('http://0.0.0.0:8000/signupotp_verify', {
+      const verifyResponse = await apiClient.post('/signupotp_verify', {
         email: signupData?.email,
+        phone_no:signupData?.phone ,
+        password:signupData?.password ,
+        name:signupData?.name ,
         otp: otpValue
+        
       });
 
       console.log('OTP verification successful:', verifyResponse.data);
 
       // Step 2: If OTP verification successful (status 200), create the account
       if (verifyResponse.status === 200) {
-        const signupResponse = await axios.post('http://0.0.0.0:8000/signup', signupData);
+        // const signupResponse = await apiClient.post('/signup', signupData);
         
-        console.log('Account created successfully:', signupResponse.data);
+        // console.log('Account created successfully:', signupResponse.data);
         
         // Set OTP as verified and navigate to role selection
         setOtpVerified(true);
-        navigate('/role');
+        navigate('/role',{state:{email:signupData.email}});
         clearSignupData();
       }
     } catch (error) {
@@ -108,7 +112,7 @@ const OTPVerification = () => {
   };  const handleResend = async () => {
     try {
       // Make API call to resend OTP
-      await axios.post('http://0.0.0.0:8000/signupotp', {
+      await apiClient.post('/signupotp', {
         email: signupData?.email
       });
       

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from './Login.module.css';
+import apiClient from '../../utils/apiClient';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -32,24 +33,19 @@ const Login = () => {
     }
 
     try {
-      // Simulate API call to request OTP
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock response from backend
-      const mockLoginResponse = {
-        email: email,
-        otp: "123456", // This would come from backend in real scenario
-        timestamp: new Date().toISOString(),
-        requestId: "login_" + Math.random().toString(36).substr(2, 9)
-      };
+      // Make API call to backend for login
+      const response = await apiClient.post('/login', {
+        email: email
+      });
 
-      // Store the login attempt data in session storage
-      sessionStorage.setItem('loginAttempt', JSON.stringify(mockLoginResponse));
-
-      // Navigate to OTP verification page
-      navigate('/verify-login-otp');
+      // If API call is successful, navigate to OTP verification page
+      if (response.status === 200) {
+        setLoading(false);
+        navigate('/verify-login-otp', { state: { email: email } });
+      }
       
     } catch (err) {
+      console.error('Error sending login request:', err);
       setError('Failed to send OTP. Please try again.');
       setLoading(false);
     }

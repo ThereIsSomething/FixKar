@@ -3,22 +3,44 @@
 import React, { useState } from 'react';
 import style from './RoleSelection.module.css';
 import { useSignup } from '../../context/SignupContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
+import apiClient from '../../utils/apiClient';
 // import workericon from '../../assets/workericon.svg'; // Uncomment and provide icon if available
+
 
 const Continue = ({ label, ...props }) => (
   <button type="button" {...props} style={{marginTop: '2rem', padding: '0.8rem 2.5rem', background: '#4F8A8B', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '1rem', cursor: 'pointer'}}>{label}</button>
 );
 
 const RoleSelection = ({ onSelect }) => {
+  const location = useLocation() ;
+  const email = location.state?.email ;
+  console.log(email);
   const { setRole } = useSignup();
   const navigate = useNavigate();
   const [selected, setSelected] = useState('user');
-  const handleContinue = () => {
-    setRole(selected);
-    if (onSelect) onSelect(selected);
-    navigate('/login');
+  const handleContinue = async () => {
+    try {
+      // Make API call to backend
+      const response = await apiClient.post('/role', {
+        email: email,
+        role: selected
+      });
+
+      // If API call is successful, proceed with navigation
+      if (response.status === 200) {
+        setRole(selected);
+        if (onSelect) onSelect(selected);
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('Error updating role:', error);
+      // You can add user-friendly error handling here
+      // For example, show a toast notification or alert
+      alert('Failed to update role. Please try again.');
+    }
   };
+  
 
   return (
     <div className={style.UserSelection}>

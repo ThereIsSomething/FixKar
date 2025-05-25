@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from './LoginOTPVerification.module.css';
+import apiClient from '../../utils/apiClient';
+import { useToken } from '../../context/TokenContext';
 
 const LoginOTPVerification = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { saveTokens } = useToken();
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [timeLeft, setTimeLeft] = useState(30);
-  const [loginAttempt, setLoginAttempt] = useState(null);
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
-    // Get login attempt data from session storage
-    const storedAttempt = sessionStorage.getItem('loginAttempt');
-    if (!storedAttempt) {
+    // Get email from navigation state
+    const emailFromState = location.state?.email;
+    if (!emailFromState) {
       navigate('/login');
       return;
     }
-    setLoginAttempt(JSON.parse(storedAttempt));
+    setEmail(emailFromState);
 
     // Start countdown timer
     const timer = setInterval(() => {
@@ -33,7 +37,7 @@ const LoginOTPVerification = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [navigate]);
+  }, [navigate, location.state]);
 
   const handleChange = (e) => {
     setOtp(e.target.value);
@@ -51,31 +55,40 @@ const LoginOTPVerification = () => {
     }
 
     try {
-      // Simulate API call to verify OTP
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Make API call to verify OTP
+      const response = await apiClient.post('/verification', {
+        email: email,
+        otp: otp
+      });
+      console.log(response) ;
 
-      // In real application, verify OTP with backend
-      if (otp === loginAttempt.otp) { // This comparison would happen on backend
-        // Mock successful login response
-        const mockUserData = {
-          id: Math.random().toString(36).substr(2, 9),
-          email: loginAttempt.email,
-          name: 'John Doe', // This would come from backend
-          token: 'mock_token_' + Math.random().toString(36).substr(2, 16)
-        };
+      if (response.status === 200) {
+        // Store user data from backend response
+        const userData = response.data;
+        
+        // Save tokens using TokenContext
+        saveTokens(userData.access_token, userData.refresh_token);
+        
+        // Store other user data
+        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem('isAuthenticated', 'true');
 
-        // Store user data in session storage
-        sessionStorage.setItem('userData', JSON.stringify(mockUserData));
-        sessionStorage.removeItem('loginAttempt'); // Clean up login attempt data
-
-        // Navigate to dashboard
-        navigate('/dashboard');
-      } else {
-        setError('Invalid OTP. Please try again.');
         setLoading(false);
+        
+        // Role-based redirection
+        const userRole = userData.role;
+        if (userRole === 'worker') {
+          navigate('/worker-dashboard');
+        } else if (userRole === 'user') {
+          navigate('/dashboard');
+        } else {
+          // Default fallback
+          navigate('/dashboard');
+        }
       }
     } catch (err) {
-      setError('Failed to verify OTP. Please try again.');
+      console.error('Error verifying OTP:', err);
+      setError('Invalid OTP. Please try again.');
       setLoading(false);
     }
   };
@@ -85,27 +98,24 @@ const LoginOTPVerification = () => {
     
     setLoading(true);
     try {
-      // Simulate API call to resend OTP
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Make API call to resend OTP
+      const response = await apiClient.post('/login', {
+        email: email
+      });
 
-      // Mock new OTP response
-      const newLoginAttempt = {
-        ...loginAttempt,
-        otp: "123456", // This would come from backend
-        timestamp: new Date().toISOString()
-      };
-
-      sessionStorage.setItem('loginAttempt', JSON.stringify(newLoginAttempt));
-      setLoginAttempt(newLoginAttempt);
-      setTimeLeft(30);
-      setLoading(false);
+      if (response.status === 200) {
+        setTimeLeft(30);
+        setLoading(false);
+        setError('');
+      }
     } catch (err) {
+      console.error('Error resending OTP:', err);
       setError('Failed to resend OTP. Please try again.');
       setLoading(false);
     }
   };
 
-  if (!loginAttempt) {
+  if (!email) {
     return null;
   }
 
@@ -114,7 +124,7 @@ const LoginOTPVerification = () => {
       <div className={styles.formWrapper}>
         <h1 className={styles.title}>Verify OTP</h1>
         <p className={styles.subtitle}>
-          Enter the verification code sent to {loginAttempt.email}
+          Enter the verification code sent to {email}
         </p>
 
         <form className={styles.form} onSubmit={handleSubmit}>
